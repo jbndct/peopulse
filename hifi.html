@@ -559,8 +559,14 @@ async function runAnalysis() {
     });
 
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.detail || 'Analysis failed');
+      const errText = await response.text(); // Read as text first
+      try {
+        const errJson = JSON.parse(errText); // Try to parse as JSON
+        throw new Error(errJson.detail || 'Analysis failed');
+      } catch (parseError) {
+        // If it fails to parse, it means Vercel threw a raw server error (like a 504 Timeout)
+        throw new Error(`Vercel Server Error (${response.status}): ${errText.substring(0, 100)}`);
+      }
     }
 
     const data = await response.json();
