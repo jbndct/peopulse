@@ -54,7 +54,7 @@ def analyze_feedback(feedback_df) -> dict:
     try:
         
         response = client.chat.completions.create(
-            model="meta-llama/llama-3.2-3b-instruct:free",
+            model="google/gemma-2-9b-it:free",
             max_tokens=1000,
             temperature=0.3,
             messages=[
