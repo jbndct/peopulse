@@ -1,4 +1,3 @@
-import uvicorn
 import json
 import io
 import time
@@ -108,4 +107,5 @@ async def upload_csv(file: UploadFile = File(...)):
     )
     
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
