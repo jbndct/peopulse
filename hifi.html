@@ -405,24 +405,23 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
         <div class="summary-hero">
           <div class="summary-hero-grid"></div>
           <div class="s-eyebrow">AI-Generated Executive Summary</div>
-          <!-- ADDED ID TO INJECT SUMMARY -->
           <div class="s-text" id="ai-summary">Processing insights...</div>
         </div>
+        
+        <!-- ADDED IDs TO METRICS -->
         <div class="metrics-4">
-          <div class="metric-box"><div class="metric-lbl">Positive</div><div class="metric-val" style="color:#16A34A;">68%</div><div class="metric-hint">872 entries</div></div>
-          <div class="metric-box"><div class="metric-lbl">Negative</div><div class="metric-val" style="color:#DC2626;">22%</div><div class="metric-hint">282 entries</div></div>
-          <div class="metric-box"><div class="metric-lbl">Neutral</div><div class="metric-val" style="color:#D97706;">10%</div><div class="metric-hint">130 entries</div></div>
-          <div class="metric-box"><div class="metric-lbl">Avg. Score</div><div class="metric-val" style="color:#021069;">7.4</div><div class="metric-hint">out of 10</div></div>
+          <div class="metric-box"><div class="metric-lbl">Positive</div><div class="metric-val" id="stat-pos-pct" style="color:#16A34A;">--</div><div class="metric-hint" id="stat-pos-count">-- entries</div></div>
+          <div class="metric-box"><div class="metric-lbl">Negative</div><div class="metric-val" id="stat-neg-pct" style="color:#DC2626;">--</div><div class="metric-hint" id="stat-neg-count">-- entries</div></div>
+          <div class="metric-box"><div class="metric-lbl">Neutral</div><div class="metric-val" id="stat-neu-pct" style="color:#D97706;">--</div><div class="metric-hint" id="stat-neu-count">-- entries</div></div>
+          <div class="metric-box"><div class="metric-lbl">Avg. Score</div><div class="metric-val" id="stat-avg" style="color:#021069;">--</div><div class="metric-hint">out of 10</div></div>
         </div>
         
         <!-- POSITIVE FEEDBACK CONTAINER -->
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
             <div class="card-title" style="margin:0;">Positive Feedback Highlights</div>
-            <!-- ADDED ID TO INJECT COUNT -->
             <span class="badge badge-green" id="pos-count">0 entries</span>
           </div>
-          <!-- ADDED ID TO INJECT HIGHLIGHT ITEMS -->
           <div id="pos-items">
             <div class="fb-item pos"><div class="fb-text">Loading praises...</div></div>
           </div>
@@ -432,10 +431,8 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
             <div class="card-title" style="margin:0;">Negative Feedback Highlights</div>
-            <!-- ADDED ID TO INJECT COUNT -->
             <span class="badge badge-red" id="neg-count">0 entries</span>
           </div>
-          <!-- ADDED ID TO INJECT HIGHLIGHT ITEMS -->
           <div id="neg-items">
             <div class="fb-item neg"><div class="fb-text">Loading complaints...</div></div>
           </div>
@@ -443,13 +440,15 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
 
       </div>
       <div>
+        
+        <!-- ADDED ID TO THEMES WRAPPER -->
         <div class="card" style="margin-bottom:16px;">
           <div class="card-title" style="margin-bottom:14px;">Top Themes</div>
-          <div class="theme-row"><span class="theme-name">Packaging Quality</span><span class="theme-cnt">341</span></div>
-          <div class="theme-row"><span class="theme-name">Delivery Speed</span><span class="theme-cnt">289</span></div>
-          <div class="theme-row"><span class="theme-name">Product Quality</span><span class="theme-cnt">256</span></div>
-          <div class="theme-row"><span class="theme-name">Customer Support</span><span class="theme-cnt">198</span></div>
+          <div id="themes-container">
+            <div class="theme-row"><span class="theme-name">Awaiting data...</span><span class="theme-cnt">--</span></div>
+          </div>
         </div>
+        
         <button class="btn-dark" onclick="toast('Report exported as PDF')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Export Full Report
@@ -608,6 +607,34 @@ async function runAnalysis() {
             </div>`;
         });
         negCount.innerText = analysis.top_complaints.length + " entries";
+    }
+    
+    // Inject Metrics
+    if (analysis.sentiment) {
+        document.getElementById('stat-pos-pct').innerText = analysis.sentiment.positive_pct || '--';
+        document.getElementById('stat-neg-pct').innerText = analysis.sentiment.negative_pct || '--';
+        document.getElementById('stat-neu-pct').innerText = analysis.sentiment.neutral_pct || '--';
+        document.getElementById('stat-avg').innerText = analysis.sentiment.avg_score || '--';
+
+        const total = analysis.sentiment.total_entries || data.rows_detected || '--';
+        document.getElementById('stat-pos-count').innerText = total + " entries";
+        document.getElementById('stat-neg-count').innerText = total + " entries";
+        document.getElementById('stat-neu-count').innerText = total + " entries";
+    }
+
+    // Inject Themes
+    const themesContainer = document.getElementById('themes-container');
+    if (analysis.themes && analysis.themes.length > 0) {
+        themesContainer.innerHTML = '';
+        analysis.themes.forEach(theme => {
+            themesContainer.innerHTML += `
+            <div class="theme-row">
+                <span class="theme-name">${theme.name}</span>
+                <span class="theme-cnt">${theme.count}</span>
+            </div>`;
+        });
+    } else {
+        themesContainer.innerHTML = '<div class="theme-row"><span class="theme-name">No themes extracted</span><span class="theme-cnt">--</span></div>';
     }
 
     goto('output');
