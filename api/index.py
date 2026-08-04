@@ -24,13 +24,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/api/")
 def health_check():
     return {"message": "API is running successfully!"}
 
-@app.post("/upload-csv")
+@app.post("/api/upload-csv")
 async def upload_csv(file: UploadFile = File(...)):
-
     if file.content_type != "text/csv":
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV file.")
     else:
