@@ -54,7 +54,7 @@ def analyze_feedback(feedback_df) -> dict:
     try:
         
         response = client.chat.completions.create(
-            model="openai/gpt-4o-mini",
+            model="meta-llama/llama-3.2-3b-instruct:free",
             max_tokens=1000,
             temperature=0.3,
             messages=[
