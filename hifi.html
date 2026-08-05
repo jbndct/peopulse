@@ -301,6 +301,8 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
     <div class="ph-title">Upload & Analyze</div>
     <div class="ph-sub">Upload your feedback dataset and configure the analysis parameters below.</div>
     <div class="upload-layout">
+      
+      <!-- COLUMN 1: Upload & Button -->
       <div>
         <div class="card">
           <div class="card-title">Upload Feedback Data</div>
@@ -321,16 +323,17 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
             <div class="file-prev-rm" onclick="rmFile()">✖</div>
           </div>
         </div>
-          <button class="btn-run" onclick="runAnalysis()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Run Analysis
-          </button>
-          <div id="prog-wrap" style="display:none;margin-top:20px;">
-            <div class="prog-label-row"><span class="prog-label" id="prog-lbl">Processing</span><span class="prog-pct" id="prog-pct">0%</span></div>
-            <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-          </div>
+        <button class="btn-run" onclick="runAnalysis()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run Analysis
+        </button>
+        <div id="prog-wrap" style="display:none;margin-top:20px;">
+          <div class="prog-label-row"><span class="prog-label" id="prog-lbl">Processing</span><span class="prog-pct" id="prog-pct">0%</span></div>
+          <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
         </div>
-      </div>
+      </div> <!-- Correctly closing COLUMN 1 here -->
+      
+      <!-- COLUMN 2: Sidebar Info -->
       <div>
         <div class="card">
           <div class="card-title" style="margin-bottom:16px;">Processing Steps</div>
@@ -351,8 +354,9 @@ p.hero-sub{font-size:19px;color:rgba(255,255,255,0.6);line-height:1.65;max-width
             <div class="tip-row"><div class="tip-dot"></div><div class="tip-text">Minimum 10 rows recommended for accurate results</div></div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> <!-- Correctly closing COLUMN 2 here -->
+
+    </div> <!-- Correctly closing .upload-layout grid here -->
   </div>
 </div>
 
