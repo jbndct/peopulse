@@ -82,3 +82,22 @@ def merge_feedback_columns(orig_df, feedback_cols) -> pd.DataFrame:
     new_df['Merged Feedback'] = orig_df[feedback_cols].apply(lambda row: ' | '.join(row.dropna().astype(str)), axis=1)
     
     return new_df
+
+def calculate_numeric_metrics(df):
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    avg_score = None
+    
+    # Look for likely rating column names
+    for col in numeric_cols:
+        if any(keyword in col.lower() for keyword in ['rating', 'score', 'sat', 'stars']):
+            avg_score = round(df[col].mean(), 1)
+            break
+            
+    # Fallback to the first numeric column if found
+    if avg_score is None and len(numeric_cols) > 0:
+        avg_score = round(df[numeric_cols[0]].mean(), 1)
+        
+    return {
+        "total_entries": len(df),
+        "avg_score": avg_score if avg_score else "N/A"
+    }
